@@ -1,0 +1,58 @@
+version: "1.0.0"
+name: multi-vendor-api
+
+services:
+  server-api:
+    container_name: multi-vendor-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    volumes:
+      - ./app
+    depends_on:
+      - postgres
+      - mail-dev
+      - rabbitmq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/multi_vendor
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: multi_vendor
+    ports:
+      - 5433:5432
+
+  mail-dev:
+    image: maildev/maildev
+    container_name: multi-vendor-maildev
+    ports:
+      - 1080:1080
+      - 1025:1025
+
+  rabbitmq:
+    image: rabbitmq:3.11.3-management
+    hostname: rabbitmq
+    restart: on-failure
+    environment:
+      RABBIT_DEFAULT_USER: "guest"
+      RABBIT_DEFAULT_PASS: "guest"
+      RABBIT_DEFAULT_VHOST: "/"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    container_name: multi-vendor-rabbitmq
+    volumes:
+      - ./rabbimq-data:/var/lib/data
+      - ./rabbimq-data/logs:/var/log/data
+

@@ -1,0 +1,41 @@
+spring:
+  profiles:
+    active: dev
+  datasource:
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  mail:
+    host: ${MAIL_SERVER_HOST}
+    port: ${MAIL_SERVER_PORT}
+    username: ${MAIL_SERVER_USERNAME}
+    password: ${MAIL_SERVER_PASSWORD}
+  servlet:
+    multipart:
+      max-file-size: 50MB
+
+application:
+  mail:
+    dev: ${APPLICATION_EMAIL_ADDRESS}
+  security:
+    jwt:
+      secret-key: ${APPLICATION_JWT_SECRET}
+      expiration: ${APPLICATION_JWT_EXPIRATION}
+  mailing:
+    front-end:
+      url: ${APPLICATION_FRONTEND_URL}
+  urls:
+    password-reset: ${APPLICATION_BACKEND_URL}
+  file:
+    upload:
+      photos-output-dir: ./uploads
+
+stripe:
+  api:
+    key: sk_test_51J3J
+server:
+  servlet:
+    context-path: /api/v1
+  port: ${SERVER_PORT}
